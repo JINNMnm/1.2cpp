@@ -1,0 +1,6 @@
+class People{
+    public:
+
+    private:
+        
+};
