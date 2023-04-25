@@ -1,6 +1,12 @@
+#ifndef MANAGER_HPP
+#define MANAGER_HPP
+#include <string>
+using namespace std;
 class Manager{
     public:
 
     private:
-        
+        string num;//π§∫≈
+        string pw;//√‹¬Î
 };
+#endif
