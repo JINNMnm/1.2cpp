@@ -8,27 +8,28 @@ Stulist::Stulist(){
     head->next = NULL;
     size = 0;
 }
-bool Stulist::checkifstu(string numv,string pwv){
-    Student *p = head->next;
+Student* Stulist::checkifstu(string numv,string pwv){
+    //查看是否有这个学生账号
+    Student *p = head;
     while(p != NULL){
-        if(p->getnum() == numv and p->getpw() == pwv)
-            return true;
+        if(p->getnum() == numv && p->getpw() == pwv)
+            return p;
         p = p->next;
     }
-    return false;
+    return NULL;
 }
-bool Stulist::stuidentity(){
-    string num,pw;//临时存储学号和密码
+Student* Stulist::stuidentity(){
+    //临时存储学号和密码
+    system("cls");
+    string num,pw;
     cout << "请输入学号:" << endl;
     cin >> num;
     cout << "(区分大小写)请输入密码:" << endl;
     cin >> pw;
-    if(checkifstu(num,pw) == true)
-        return true;
-    else
-        return false;
+    return checkifstu(num,pw);
 }
 void Stulist::addstu(string numv,string pwv){
+    //添加学生
     Student *p = new Student(numv,pwv);
     p->next = head;
     head = p;

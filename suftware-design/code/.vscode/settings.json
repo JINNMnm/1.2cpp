@@ -16,5 +16,6 @@
         "type_traits": "cpp",
         "cstring": "cpp",
         "ostream": "cpp"
-    }
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
 }
