@@ -1,10 +1,27 @@
 #include "../hpp/Coulist.hpp"
 #include <iostream>
+#include <fstream>
 using namespace std;
 Coulist::Coulist(){
     head = new Course;
     head->next = NULL;
     size = 0;
+}
+
+void Coulist::write(){
+    ofstream out("../txt/course.txt");
+    Course* p = head;
+    while(p->next != NULL){
+        out << p->getbh() << ' ';
+        out << p->getname() << ' ';
+        out << p->getteacher() << ' ';
+        out << p->getcredit() << ' ';
+        out << p->getcatagory() << ' ';
+        out << p->getcollege() << ' ';
+        out << p->getassessment() << endl;
+        p = p->next;
+    }
+    out.close();
 }
 
 void Coulist::addcourse(int bhv,string namev,string teacherv,int creditv,string catagoryv,string collegev,int assessmentv){
@@ -14,6 +31,103 @@ void Coulist::addcourse(int bhv,string namev,string teacherv,int creditv,string 
     size++;
 }
 
+bool Coulist::sortcourse(){
+    //总排序，具体分为以下两部分
+    //按照学分排序
+    //按照学院排序
+    int choice_1;
+    cin >> choice_1;
+    switch(choice_1){
+        case 1:{
+            //按学分排序
+            system("cls");
+            cout << "按学分排序前数据：" << endl << endl;
+            this->showcourse();
+            this->sort_credit();
+            cout << "按学分排序后数据：" << endl << endl;
+            this->showcourse();
+            break;
+        }
+        case 2:{
+            //按学院排序
+            system("cls");
+            cout << "按学院排序前数据：" << endl << endl;
+            this->showcourse();
+            this->sort_college();
+            cout << "按学院排序后数据：" << endl << endl;
+            this->showcourse();
+            break;
+        }
+        default:{
+            cout << "输入错误，请重新输入" << endl;
+            return false;
+        }
+    }
+    return true;
+}
+
+void Coulist::swapcourse(Course*p,Course*q){
+    int temp;
+    string temp1;
+    temp = p->getbh();
+    p->setbh(q->getbh());
+    q->setbh(temp);
+    temp = p->getassessment();
+    p->setassessment(q->getassessment());
+    q->setassessment(temp);
+    temp = p->getcredit();
+    p->setcredit(q->getcredit());
+    q->setcredit(temp);
+    temp1 = p->getname();
+    p->setname(q->getname());
+    q->setname(temp1);
+    temp1 = p->getteacher();
+    p->setteacher(q->getteacher());
+    q->setteacher(temp1);
+    temp1 = p->getcollege();
+    p->setcollege(q->getcollege());
+    q->setcollege(temp1);
+    temp1 = p->getcatagory();
+    p->setcatagory(q->getcatagory());
+    q->setcatagory(temp1);
+}
+
+void Coulist::sort_credit(){
+    Course *p = head,*q = NULL,*mini = NULL;
+    while(p->next->next){
+        q = p->next;
+        mini = p;
+        while(q->next){
+            if(mini->getcredit() > q->getcredit()){
+                mini = q;
+            } 
+            q = q->next;
+        }
+        if(mini != p){
+            swapcourse(mini,p);
+        }
+        p = p->next;
+    }
+}
+
+
+void Coulist::sort_college(){
+    Course *p = head,*q = NULL,*mini = NULL;
+    while(p->next->next){
+        q = p->next;
+        mini = p;
+        while(q->next){
+            if(mini->getcollege() > q->getcollege()){
+                mini = q;
+            } 
+            q = q->next;
+        }
+        if(mini != p){
+            swapcourse(mini,p);
+        }
+        p = p->next;
+    }
+}
 bool Coulist::delcourse(int bhv){
     Course *p = head,*pre = NULL;
     while(p->next){
@@ -27,15 +141,11 @@ bool Coulist::delcourse(int bhv){
     }
     return false;
 }
+
 void Coulist::showcourse(){
     Course* p = head;
     while(p->next != NULL){
-        cout << "课程编号:" << p->getbh() << ' ';
-        cout << "课程名称:" << p->getname() << ' ';
-        cout << "课程评价:" << p->getassessment() << ' ';
-        cout << "课程学分:" << p->getcredit() << ' ';
-        cout << "认课教师:" << p->getteacher() << ' ';
-        cout << "开课学院:" << p->getcollege() << endl;
+        p->showcourse();
         p = p->next;
     }
 }

@@ -1,4 +1,3 @@
-
 #ifndef STUDENT_HPP
 #define STUDENT_HPP
 #include <string>
@@ -12,6 +11,8 @@ class Student{
         void showchosen();//查看已选课程
         string getnum(){return num;}
         string getpw(){return pw;}
+        int getnumofchosen(){return numofchosen;}
+        int getchosen(int i){return chosen[i];}
     private:
         int chosen[10];//已选课程编号
         int numofchosen;//已选课程数量

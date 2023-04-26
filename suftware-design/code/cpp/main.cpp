@@ -14,9 +14,10 @@ void stuidentity();
 void manidentity();
 void stuwelcome();
 void manwelcome();
-void ifsort();
+void howsort();
 void howfind();
 void howassess();
+void bye();
 
 int main()
 {
@@ -50,171 +51,187 @@ out1:
     {
         switch (choice_1)
         {
-        case 1:
-        {
-            Student *target = stulist.stuidentity(); //认证并储存身份
-            while (target == NULL)
-            {
-                cout << "学号或密码错误" << endl
-                     << endl;
-                system("pause");
-                target = stulist.stuidentity();
-                wrongtime++;
-                if (wrongtime == 3)
+            case 1:{
+                Student *target = stulist.stuidentity(); //认证并储存身份
+                while (target == NULL)
                 {
-                    cout << "错误次数过多,请稍后再试" << endl;
+                    cout << "学号或密码错误" << endl
+                        << endl;
                     system("pause");
-                    goto out1;
-                }
-            }              //学生身份认证
-            wrongtime = 0; //错误次数清零
-        out2:
-            stuwelcome();
-            cin >> choice_2;
-            switch (choice_2)
-            {
-            case 1:
-                //选课
-                target->addchosen();
-                system("pause");
-                goto out2;
-                break;
-            case 2:
-                //退课
-                target->delchosen();
-                system("pause");
-                goto out2;
-                break;
-            case 3:
-                //查询课程
-                howfind();
-                if (!coulist.findcourse())
+                    target = stulist.stuidentity();
+                    wrongtime++;
+                    if (wrongtime == 3)
+                    {
+                        cout << "错误次数过多,请稍后再试" << endl;
+                        system("pause");
+                        goto out1;
+                    }
+                }              //学生身份认证
+                wrongtime = 0; //错误次数清零
+                out2:
+                stuwelcome();
+                cin >> choice_2;
+                switch (choice_2)
                 {
-                    //查找，如果没找到就执行if，返回上一个界面
-                    cout << "输入任意值返回上一界面" << endl;
+                case 1:
+                    //选课
+                    target->addchosen();
                     system("pause");
                     goto out2;
-                }
-                system("pause");
-                goto out2;
-                break;
-            case 4:
-                //课程评价
-                howassess();
-                if (!coulist.find_and_assesscourse())
-                {
-                    cout << "评价失败,请输入任意值返回上一界面" << endl;
+                    break;
+                case 2:
+                    //退课
+                    target->delchosen();
                     system("pause");
-                }
-                goto out2;
-                break;
-            case 5:
-                //重新登陆
-                goto out1;
-            default:
-                cout << "输入错误,请重新输入" << endl;
-                break;
-            }
-            break;
-        }
-        case 2:
-        {
-            if (!manager.manageridentity())
-            {
-                cout << "账号或密码错误" << endl;
-                wrongtime++;
-                if (wrongtime == 3)
-                {
-                    cout << "错误次数过多,请稍后再试" << endl;
+                    goto out2;
+                    break;
+                case 3:
+                    //查询课程
+                    howfind();
+                    if (!coulist.findcourse())
+                    {
+                        //查找，如果没找到就执行if，返回上一个界面
+                        cout << "输入任意值返回上一界面" << endl;
+                        system("pause");
+                        goto out2;
+                    }
                     system("pause");
+                    goto out2;
+                    break;
+                case 4:
+                    //课程评价
+                    howassess();
+                    if (!coulist.find_and_assesscourse())
+                    {
+                        cout << "评价失败,请输入任意值返回上一界面" << endl;
+                        system("pause");
+                    }
+                    goto out2;
+                    break;
+                case 5:
+                    //重新登陆
                     goto out1;
+                default:
+                    cout << "输入错误,请重新输入" << endl;
+                    break;
                 }
-            }
-            wrongtime = 0; //错误次数清零
-            out3:
-            manwelcome();
-            cin >> choice_2;
-            switch (choice_2)
-            {
-            case 1:
-                //添加课程
-                system("cls");
-                cout << "目前已有的课程信息如下：" << endl;
-                coulist.showcourse();
-                cout << "请按以下顺序输入课程信息：课程编号 课程名称 任课教师 学分 课程类别 开课学院 课程评价" << endl;
-                cin >> bhv >> namev >> teacherv >> creditv >> catagoryv >> collegev >> assessmentv;
-                coulist.addcourse(bhv, namev, teacherv, creditv, catagoryv, collegev, assessmentv);
-                cout << endl << "加课成功,以下是加课后的课程信息汇总" << endl << endl;
-                coulist.showcourse();
-                system("pause");
-                goto out3;
-                break;
-            case 2:
-                //删除课程
-                system("cls");
-                cout << "目前已有的课程信息如下：" << endl;
-                coulist.showcourse();
-                cout << "请输入要删除的课程编号" << endl;
-                cin >> bhv;
-                if (!coulist.delcourse(bhv))
-                {
-                    cout << "删除失败!因为您提供的课程不存在" << endl;
-                    system("pause");
-                    goto out3;
-                }
-                cout << "删除成功,以下是删除后的课程信息汇总" << endl;
-                coulist.showcourse();
-                system("pause");
-                goto out3;
-                break;
-            case 3:
-                //修改课程
-                system("cls");
-                system("cls");
-                cout << "目前已有的课程信息如下：" << endl;
-                coulist.showcourse();
-                cout << "请输入要修改的课程编号" << endl;
-                cin >> bhv;
-                if (!coulist.modifycourse(bhv))
-                {
-                    cout << "修改失败!因为您提供的课程不存在" << endl;
-                    system("pause");
-                    goto out3;
-                }
-                cout << "修改成功,以下是修改后的课程信息汇总" << endl;
-                coulist.showcourse();
-                system("pause");
-                goto out3;
-                break;
-            case 4:
-            {
-                //查询课程
-                howfind();
-                if (!coulist.findcourse())
-                {
-                    //查找，如果没找到就执行if，返回上一个界面
-                    cout << "输入任意值返回上一界面" << endl;
-                    system("pause");
-                    goto out3;
-                }
-                system("pause");
-                goto out3;
                 break;
             }
-            case 5:
-                //重新登陆
-                goto out1;
-            default:
+            case 2:{
+                while(!manager.manageridentity())
+                {
+                    cout << "账号或密码错误" << endl;
+                    system("pause");
+                    wrongtime++;
+                    if (wrongtime == 3)
+                    {
+                        cout << "错误次数过多,请稍后再试" << endl;
+                        system("pause");
+                        goto out1;
+                    }
+                }
+                wrongtime = 0; //错误次数清零
+                out3:
+                manwelcome();
+                cin >> choice_2;
+                switch (choice_2)
+                {
+                case 1:
+                    //添加课程
+                    system("cls");
+                    cout << "目前已有的课程信息如下：" << endl;
+                    coulist.showcourse();
+                    cout << "请按以下顺序输入课程信息：课程编号 课程名称 任课教师 学分 课程类别 开课学院 课程评价" << endl;
+                    cin >> bhv >> namev >> teacherv >> creditv >> catagoryv >> collegev >> assessmentv;
+                    coulist.addcourse(bhv, namev, teacherv, creditv, catagoryv, collegev, assessmentv);
+                    cout << endl << "加课成功,以下是加课后的课程信息汇总" << endl << endl;
+                    coulist.showcourse();
+                    system("pause");
+                    goto out3;
+                    break;
+                case 2:
+                    //删除课程
+                    system("cls");
+                    cout << "目前已有的课程信息如下：" << endl;
+                    coulist.showcourse();
+                    cout << "请输入要删除的课程编号" << endl;
+                    cin >> bhv;
+                    if (!coulist.delcourse(bhv))
+                    {
+                        cout << "删除失败!因为您提供的课程不存在" << endl;
+                        system("pause");
+                        goto out3;
+                    }
+                    cout << "删除成功,以下是删除后的课程信息汇总" << endl;
+                    coulist.showcourse();
+                    system("pause");
+                    goto out3;
+                    break;
+                case 3:
+                    //修改课程
+                    system("cls");
+                    system("cls");
+                    cout << "目前已有的课程信息如下：" << endl;
+                    coulist.showcourse();
+                    cout << "请输入要修改的课程编号" << endl;
+                    cin >> bhv;
+                    if (!coulist.modifycourse(bhv))
+                    {
+                        cout << "修改失败!因为您提供的课程不存在" << endl;
+                        system("pause");
+                        goto out3;
+                    }
+                    cout << "修改成功,以下是修改后的课程信息汇总" << endl;
+                    coulist.showcourse();
+                    system("pause");
+                    goto out3;
+                    break;
+                case 4:{
+                    //查询课程
+                    howfind();
+                    if (!coulist.findcourse())
+                    {
+                        //查找，如果没找到就执行if，返回上一个界面
+                        cout << "输入任意值返回上一界面" << endl;
+                        system("pause");
+                        goto out3;
+                    }
+                    system("pause");
+                    goto out3;
+                    break;
+                }
+                case 5:{
+                    //排序课程
+                    howsort();
+                    if (!coulist.sortcourse())
+                    {
+                        cout << "排序失败,请输入任意值返回上一界面" << endl;
+                        system("pause");
+                    }
+                    system("pause");
+                    goto out3;
+                }
+                case 6:
+                    //重新登陆
+                    goto out1;
+                default:
+                    cout << "输入错误,请重新输入" << endl;
+                    goto out3;
+                    break;
+                }
+                break;
+            }
+            case 3:{
+                bye();
+                system("pause");
+                stulist.write();
+                coulist.write();
+                return 0;
+            }
+            default:{
                 cout << "输入错误,请重新输入" << endl;
                 break;
             }
-            break;
-        }
-        default:
-        {
-            cout << "输入错误,请重新输入" << endl;
-            break;
-        }
         }
     }
     return 0;
@@ -233,9 +250,9 @@ void welcome()
     cout << "                            |           欢迎进入学校开课查询系统                 |" << endl;
     cout << "                            |           1.学生登陆                               |" << endl;
     cout << "                            |           2.管理员登录                             |" << endl;
-    cout << "                            |                                                    |" << endl;
+    cout << "                            |           3.关闭系统                               |" << endl;
     cout << "                            ------------------------------------------------------" << endl;
-    cout << "                                         请选择(1/2):" << endl;
+    cout << "                                         请选择(1/2/3):" << endl;
 }
 void stuwelcome()
 {
@@ -259,7 +276,8 @@ void manwelcome()
     cout << "                            |           2.删除课程                               |" << endl;
     cout << "                            |           3.修改课程                               |" << endl;
     cout << "                            |           4.查寻课程                               |" << endl;
-    cout << "                            |           5.退出登陆                              |" << endl;
+    cout << "                            |           5.排序课程                               |" << endl;
+    cout << "                            |           6.退出登录                               |" << endl;
     cout << "                            ------------------------------------------------------" << endl;
     cout << "                                         请选择(1/2/3/4/5):" << endl;
 }
@@ -281,9 +299,26 @@ void howassess()
     system("cls");
     cout << "                            ------------------------------------------------------" << endl;
     cout << "                            |           欢迎进入学校开课查询系统                 |" << endl;
-    cout << "                            |           1.按课程编号评价                          |" << endl;
-    cout << "                            |           2.按课程名称评价                          |" << endl;
-    cout << "                            |           3.按课程教师评价                          |" << endl;
+    cout << "                            |           1.按课程编号评价                         |" << endl;
+    cout << "                            |           2.按课程名称评价                         |" << endl;
+    cout << "                            |           3.按课程教师评价                         |" << endl;
     cout << "                            ------------------------------------------------------" << endl;
     cout << "                                         请选择(1/2/3/4,-1返回上一级):" << endl;
+}
+void howsort()
+{
+    system("cls");
+    cout << "                            ------------------------------------------------------" << endl;
+    cout << "                            |           欢迎进入学校开课查询系统                 |" << endl;
+    cout << "                            |           1.按课程学分排序                         |" << endl;
+    cout << "                            |           2.按课程学院排序                         |" << endl;
+    cout << "                            ------------------------------------------------------" << endl;
+    cout << "                                                请选择(1/2):" << endl;
+}
+
+void bye(){
+    system("cls");
+    cout << "                            ------------------------------------------------------" << endl;
+    cout << "                            |           感谢使用学校开课查询系统~                 |" << endl;
+    cout << "                            ------------------------------------------------------" << endl;
 }
