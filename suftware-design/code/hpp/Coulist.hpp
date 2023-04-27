@@ -3,7 +3,7 @@
 #include "Course.hpp"
 class Coulist{
     public:
-        Coulist();
+        Coulist();//构造函数
         void addcourse(int bhv,string namev,string teacherv,int creditv,string catagoryv,string collegev,int assessmentv);//添加课程
         bool delcourse(int bhv);//按照课程编号删除课程
         bool modifycourse(int bhv);//修改课程
