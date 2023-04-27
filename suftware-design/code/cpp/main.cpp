@@ -28,10 +28,11 @@ int main()
     ifstream inCourse("../txt/Course.txt");
     ifstream inManager("../txt/Manager.txt");
     string numv, pwv, collegev, namev, teacherv, catagoryv;
-    int bhv, assessmentv, creditv;
-    while (inStudent >> numv >> pwv)
+    int bhv, assessmentv, creditv,numofchosenv,chosenv[10];
+    while (inStudent >> numv >> pwv >> numofchosenv)
     {
-        stulist.addstu(numv, pwv);
+        for(int i = 0;i < numofchosenv;i++) inStudent >> chosenv[i];
+        stulist.addstu(numv, pwv,numofchosenv,chosenv);
     }
     inStudent.close(); //学生和课程信息读取完毕
     while (inCourse >> bhv >> namev >> teacherv >> creditv >> catagoryv >> collegev >> assessmentv)
@@ -69,19 +70,23 @@ out1:
                 }              //学生身份认证
                 wrongtime = 0; //错误次数清零
                 out2:
+                target->del_nonecourse(coulist);
                 stuwelcome();
                 cin >> choice_2;
                 switch (choice_2)
                 {
                 case 1:
                     //选课
-                    target->addchosen();
+                    target->addchosen(coulist);
                     system("pause");
                     goto out2;
                     break;
                 case 2:
                     //退课
-                    target->delchosen();
+                    target->showchosen();
+                    cout << "请输入要退的课程编号" << endl;
+                    cin >> bhv;
+                    target->delchosen(bhv);
                     system("pause");
                     goto out2;
                     break;
@@ -109,6 +114,11 @@ out1:
                     goto out2;
                     break;
                 case 5:
+                    //查看已选课程
+                    target->showchosen();
+                    system("pause");
+                    goto out2;
+                case 6:
                     //重新登陆
                     goto out1;
                 default:
@@ -139,12 +149,12 @@ out1:
                 case 1:
                     //添加课程
                     system("cls");
-                    cout << "目前已有的课程信息如下：" << endl;
+                    cout << "目前已有的课程信息如下,共" << coulist.getsize() << "节：" << endl;
                     coulist.showcourse();
                     cout << "请按以下顺序输入课程信息：课程编号 课程名称 任课教师 学分 课程类别 开课学院 课程评价" << endl;
                     cin >> bhv >> namev >> teacherv >> creditv >> catagoryv >> collegev >> assessmentv;
                     coulist.addcourse(bhv, namev, teacherv, creditv, catagoryv, collegev, assessmentv);
-                    cout << endl << "加课成功,以下是加课后的课程信息汇总" << endl << endl;
+                    cout << endl << "加课成功,共" << coulist.getsize() << "节,以下是加课后的课程信息汇总" << endl << endl;
                     coulist.showcourse();
                     system("pause");
                     goto out3;
@@ -152,7 +162,7 @@ out1:
                 case 2:
                     //删除课程
                     system("cls");
-                    cout << "目前已有的课程信息如下：" << endl;
+                    cout << "目前已有的课程信息如下,共" << coulist.getsize() << "节：" << endl;
                     coulist.showcourse();
                     cout << "请输入要删除的课程编号" << endl;
                     cin >> bhv;
@@ -162,16 +172,14 @@ out1:
                         system("pause");
                         goto out3;
                     }
-                    cout << "删除成功,以下是删除后的课程信息汇总" << endl;
+                    cout << endl << "删课成功,共" << coulist.getsize() << "节,以下是删课后的课程信息汇总" << endl << endl;
                     coulist.showcourse();
                     system("pause");
                     goto out3;
                     break;
                 case 3:
                     //修改课程
-                    system("cls");
-                    system("cls");
-                    cout << "目前已有的课程信息如下：" << endl;
+                    cout << "目前已有的课程信息如下,共" << coulist.getsize() << "节：" << endl;
                     coulist.showcourse();
                     cout << "请输入要修改的课程编号" << endl;
                     cin >> bhv;
@@ -181,7 +189,7 @@ out1:
                         system("pause");
                         goto out3;
                     }
-                    cout << "修改成功,以下是修改后的课程信息汇总" << endl;
+                    cout << endl << "修改成功,共" << coulist.getsize() << "节,以下是修改后的课程信息汇总" << endl << endl;
                     coulist.showcourse();
                     system("pause");
                     goto out3;
@@ -263,9 +271,10 @@ void stuwelcome()
     cout << "                            |           2.退课                                   |" << endl;
     cout << "                            |           3.查寻课程                               |" << endl;
     cout << "                            |           4.课程评价                               |" << endl;
-    cout << "                            |           5.退出登陆                               |" << endl;
+    cout << "                            |           5.查看已选课程编号                       |" << endl;
+    cout << "                            |           6.退出登陆                               |" << endl;
     cout << "                            ------------------------------------------------------" << endl;
-    cout << "                                         请选择(1/2/3/4/5):" << endl;
+    cout << "                                         请选择(1/2/3/4/5/6):" << endl;
 }
 void manwelcome()
 {
@@ -279,7 +288,7 @@ void manwelcome()
     cout << "                            |           5.排序课程                               |" << endl;
     cout << "                            |           6.退出登录                               |" << endl;
     cout << "                            ------------------------------------------------------" << endl;
-    cout << "                                         请选择(1/2/3/4/5):" << endl;
+    cout << "                                         请选择(1/2/3/4/5/6):" << endl;
 }
 void howfind()
 {
@@ -319,6 +328,6 @@ void howsort()
 void bye(){
     system("cls");
     cout << "                            ------------------------------------------------------" << endl;
-    cout << "                            |           感谢使用学校开课查询系统~                 |" << endl;
+    cout << "                            |           感谢使用学校开课查询系统~                  |" << endl;
     cout << "                            ------------------------------------------------------" << endl;
 }

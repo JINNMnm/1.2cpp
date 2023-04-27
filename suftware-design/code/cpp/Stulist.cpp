@@ -15,10 +15,11 @@ void Stulist::write(){
     Student* p = head;
     while(p->next != NULL){
         out << p->getnum() << ' ';
-        out << p->getpw() << endl;//写入学号和密码
-        out << p->getnumofchosen() << endl;//写入已选课程数量
+        out << p->getpw()   << ' ';//写入学号和密码
+        out << p->getnumofchosen()  << ' ';//写入已选课程数量
         for(int i = 0;i < p->getnumofchosen();i++)
             out << p->getchosen(i) << ' ';//写入已选课程编号
+        out << endl;
         p = p->next;
     }
     out.close();
@@ -43,9 +44,9 @@ Student* Stulist::stuidentity(){
     cin >> pw;
     return checkifstu(num,pw);
 }
-void Stulist::addstu(string numv,string pwv){
+void Stulist::addstu(string& numv,string& pwv,int& numofchosenv,int (&chosenv)[10]){
     //添加学生
-    Student *p = new Student(numv,pwv);
+    Student *p = new Student(numv,pwv,numofchosenv,chosenv);
     p->next = head;
     head = p;
     size++;

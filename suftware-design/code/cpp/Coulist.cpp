@@ -3,12 +3,14 @@
 #include <fstream>
 using namespace std;
 Coulist::Coulist(){
+    //构造函数
     head = new Course;
     head->next = NULL;
     size = 0;
 }
 
 void Coulist::write(){
+    //写入文件
     ofstream out("../txt/course.txt");
     Course* p = head;
     while(p->next != NULL){
@@ -25,6 +27,7 @@ void Coulist::write(){
 }
 
 void Coulist::addcourse(int bhv,string namev,string teacherv,int creditv,string catagoryv,string collegev,int assessmentv){
+    //添加课程
     Course* p = new Course(bhv,namev,teacherv,creditv,catagoryv,collegev,assessmentv);
     p->next = head;
     head = p;
@@ -67,6 +70,7 @@ bool Coulist::sortcourse(){
 }
 
 void Coulist::swapcourse(Course*p,Course*q){
+    //交换课程
     int temp;
     string temp1;
     temp = p->getbh();
@@ -93,6 +97,7 @@ void Coulist::swapcourse(Course*p,Course*q){
 }
 
 void Coulist::sort_credit(){
+    //按学分排序
     Course *p = head,*q = NULL,*mini = NULL;
     while(p->next->next){
         q = p->next;
@@ -112,6 +117,7 @@ void Coulist::sort_credit(){
 
 
 void Coulist::sort_college(){
+    //按学院排序
     Course *p = head,*q = NULL,*mini = NULL;
     while(p->next->next){
         q = p->next;
@@ -128,21 +134,30 @@ void Coulist::sort_college(){
         p = p->next;
     }
 }
+
 bool Coulist::delcourse(int bhv){
-    Course *p = head,*pre = NULL;
+    //删除课程信息
+    Course *p = head->next,*pre = head;
+    if(head->getbh() == bhv){
+        head = head->next;
+        size--;
+        return true;
+    }
     while(p->next){
-        pre = p;
         if(p->getbh() == bhv){
             pre->next = p->next;
             delete p;
             size--;
             return true;
         }
+        pre = p;
+        p = p->next;
     }
     return false;
 }
 
 void Coulist::showcourse(){
+    //显示所有课程信息
     Course* p = head;
     while(p->next != NULL){
         p->showcourse();
@@ -151,6 +166,7 @@ void Coulist::showcourse(){
 }
 
 bool Coulist::findcourse(){
+    //查找课程信息
     int choice_1;
     string teacherv,collegev;
     cin >> choice_1;//用户输入要如何查找？
@@ -208,6 +224,7 @@ bool Coulist::findcourse(){
 }
 
 bool Coulist::find_and_assesscourse(){
+    //查找课程信息并评价
     int choice_1,assessmentv;
     string teacherv,collegev;
     Course* course;//临时变量储存找到的课程，以免下面函数二次调用
@@ -273,6 +290,7 @@ bool Coulist::find_and_assesscourse(){
 }
 
 bool Coulist::modifycourse(int bhv){
+    //修改课程信息
     int bhv2,creditv;
     string namev,teacherv,catagoryv,collegev;
     Course* target = findbh(bhv);
@@ -287,26 +305,26 @@ bool Coulist::modifycourse(int bhv){
         target->setcredit(creditv);
         target->setcatagory(catagoryv);
         target->setcollege(collegev);
-        system("pause");
         return true;
     }
     else
         return false;
 }
 
-Course* Coulist::findbh(int bhv){
+Course* Coulist::findbh(int bhv)const{
+    // 按课程编号查找课程
     Course* p = head;
     while(p != NULL){
         if(p->getbh() == bhv)
             return p;
         p = p->next;
     }
-    cout << size << endl;
     cout << "查无此课" << endl;
     return NULL;
 }
 
-Course* Coulist::findname(string namev){
+Course* Coulist::findname(string namev)const{
+    //按课程名称查找课程
     Course* p = head;
     while(p != NULL){
         if(p->getname() == namev)
@@ -317,7 +335,8 @@ Course* Coulist::findname(string namev){
     return NULL;
 }
 
-Course* Coulist::findteacher(string teacherv){
+Course* Coulist::findteacher(string teacherv)const{
+    //按教师查找课程
     Course* p = head;
     while(p != NULL){
         if(p->getteacher() == teacherv)
@@ -328,7 +347,8 @@ Course* Coulist::findteacher(string teacherv){
     return NULL;
 }
 
-Course* Coulist::findcollege(string collegev){
+Course* Coulist::findcollege(string collegev)const{
+    //按学院查找课程
     Course* p = head;
     while(p != NULL){
         if(p->getcollege() == collegev)

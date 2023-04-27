@@ -5,7 +5,6 @@ using namespace std;
 class Course{
     public:
         Course* next;
-        
         Course(int bhv = -1,string namev = "",string teacherv = "",int creditv = -1,string catagoryv = "",string collegev = "",int assessmentv = -1):bh(bhv),name(namev),teacher(teacherv),catagory(catagoryv),credit(creditv),college(collegev),assessment(assessmentv){};
         void showcourse();//ÏÔÊ¾¿Î³Ì
 
