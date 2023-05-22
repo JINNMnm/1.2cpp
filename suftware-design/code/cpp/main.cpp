@@ -47,6 +47,7 @@ int main()
 out1:
     welcome();
     while (cin >> choice_1)
+    
     {
         switch (choice_1)
         {

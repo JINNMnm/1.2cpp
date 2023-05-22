@@ -3,7 +3,7 @@
 #include <fstream>
 using namespace std;
 Coulist::Coulist(){
-    //构造函数
+    //创建一个带有哨兵的链表
     head = new Course;
     head->next = NULL;
     size = 0;
@@ -12,8 +12,8 @@ Coulist::Coulist(){
 void Coulist::write(){
     //写入文件
     ofstream out("../txt/course.txt");
-    Course* p = head;
-    while(p->next != NULL){
+    Course* p = head->next;
+    while(p){
         out << p->getbh() << ' ';
         out << p->getname() << ' ';
         out << p->getteacher() << ' ';
@@ -29,8 +29,8 @@ void Coulist::write(){
 void Coulist::addcourse(int bhv,string namev,string teacherv,int creditv,string catagoryv,string collegev,int assessmentv){
     //添加课程
     Course* p = new Course(bhv,namev,teacherv,creditv,catagoryv,collegev,assessmentv);
-    p->next = head;
-    head = p;
+    p->next = head->next;
+    head->next = p;
     size++;
 }
 
@@ -98,11 +98,11 @@ void Coulist::swapcourse(Course*p,Course*q){
 
 void Coulist::sort_credit(){
     //按学分排序
-    Course *p = head,*q = NULL,*mini = NULL;
-    while(p->next->next){
+    Course *p = head->next,*q = NULL,*mini = NULL;
+    while(p->next){
         q = p->next;
         mini = p;
-        while(q->next){
+        while(q){
             if(mini->getcredit() > q->getcredit()){
                 mini = q;
             } 
@@ -118,11 +118,11 @@ void Coulist::sort_credit(){
 
 void Coulist::sort_college(){
     //按学院排序
-    Course *p = head,*q = NULL,*mini = NULL;
-    while(p->next->next){
+    Course *p = head->next,*q = NULL,*mini = NULL;
+    while(p->next){
         q = p->next;
         mini = p;
-        while(q->next){
+        while(q){
             if(mini->getcollege() > q->getcollege()){
                 mini = q;
             } 
@@ -138,12 +138,7 @@ void Coulist::sort_college(){
 bool Coulist::delcourse(int bhv){
     //删除课程信息
     Course *p = head->next,*pre = head;
-    if(head->getbh() == bhv){
-        head = head->next;
-        size--;
-        return true;
-    }
-    while(p->next){
+    while(p){
         if(p->getbh() == bhv){
             pre->next = p->next;
             delete p;
@@ -158,8 +153,8 @@ bool Coulist::delcourse(int bhv){
 
 void Coulist::showcourse(){
     //显示所有课程信息
-    Course* p = head;
-    while(p->next != NULL){
+    Course* p = head->next;
+    while(p){
         p->showcourse();
         p = p->next;
     }
@@ -232,7 +227,7 @@ bool Coulist::find_and_assesscourse(){
                 break;
             else
                 cout << "输入错误，请重新输入" << endl;
-        }
+        }//保证输入的评价在0-100之间
         course->setassessment(assessmentv);
     }
     else{
@@ -268,8 +263,8 @@ bool Coulist::modifycourse(int bhv){
 
 Course* Coulist::findbh(int bhv)const{
     // 按课程编号查找课程
-    Course* p = head;
-    while(p != NULL){
+    Course* p = head->next;
+    while(p){
         if(p->getbh() == bhv)
             return p;
         p = p->next;
@@ -280,9 +275,9 @@ Course* Coulist::findbh(int bhv)const{
 
 bool Coulist::findname(string namev)const{
     //按课程名称查找课程
-    Course* p = head;
+    Course* p = head->next;
     int count = 0;
-    while(p != NULL){
+    while(p){
         if(p->getname() == namev){
             p->showcourse();
             count++;
@@ -294,15 +289,15 @@ bool Coulist::findname(string namev)const{
         return false;
     }
     else
-        cout << "共" << count << "门课程" << endl;
+        cout << "共查找到" << count << "门课程" << endl;
     return true;
 }
 
 bool Coulist::findteacher(string teacherv)const{
     //按教师查找课程
-    Course* p = head;
+    Course* p = head->next;
     int count = 0;
-    while(p != NULL){
+    while(p){
         if(p->getteacher() == teacherv){
             p->showcourse();
             count++;
@@ -314,15 +309,15 @@ bool Coulist::findteacher(string teacherv)const{
         return false;
     }
     else
-        cout << "共" << count << "门课程" << endl;
+        cout << "共查找到" << count << "门课程" << endl;
     return true;
 }
 
 bool Coulist::findcollege(string collegev)const{
     //按学院查找课程
-    Course* p = head;
+    Course* p = head->next;
     int count = 0;
-    while(p != NULL){
+    while(p){
         if(p->getcollege() == collegev){
             p->showcourse();
             count++;
@@ -334,6 +329,6 @@ bool Coulist::findcollege(string collegev)const{
         return false;
     }
     else
-        cout << "共" << count << "门课程" << endl;
+        cout << "共查找到" << count << "门课程" << endl;
     return true;
 }
