@@ -20,18 +20,47 @@ void Coulist::write(){
         out << p->getcredit() << ' ';
         out << p->getcatagory() << ' ';
         out << p->getcollege() << ' ';
-        out << p->getassessment() << endl;
+        out << p->getassessment() << ' ';
+        out << p->getday() << ' ';
+        out << p->gettime() << endl;
         p = p->next;
     }
     out.close();
 }
 
-void Coulist::addcourse(int bhv,string namev,string teacherv,int creditv,string catagoryv,string collegev,int assessmentv){
+bool Coulist::checkif_teacher_have_time(int dayv,int timev,string teacherv){
+    //检查老师是否有空
+    Course* p = head->next;
+    while(p){
+        if(p->getday() == dayv && p->gettime() == timev && p->getteacher() == teacherv)
+            return false;
+        p = p->next;
+    }
+    return true;
+}
+
+bool Coulist::checkif_teacher_have_time(int dayv,int timev,string teacherv,int except_bh){
+    //检查老师,除了编号为except_bh的课程之外，是否有空
+    Course* p = head->next;
+    while(p){
+        if(p->getday() == dayv && p->gettime() == timev && p->getteacher() == teacherv && p->getbh() != except_bh)
+            return false;
+        p = p->next;
+    }
+    return true;
+}
+
+bool Coulist::addcourse(int bhv,string namev,string teacherv,int creditv,string catagoryv,string collegev,int assessmentv,int dayv,int timev){
     //添加课程
-    Course* p = new Course(bhv,namev,teacherv,creditv,catagoryv,collegev,assessmentv);
+    if(!checkif_teacher_have_time(dayv,timev,teacherv)){
+        cout << "该老师在该时间段已有课程，添加失败" << endl;
+        return false;
+    }
+    Course* p = new Course(bhv,namev,teacherv,creditv,catagoryv,collegev,assessmentv,dayv,timev);
     p->next = head->next;
     head->next = p;
     size++;
+    return true;
 }
 
 bool Coulist::sortcourse(){
@@ -173,8 +202,10 @@ bool Coulist::findcourse(){
             cin >> bhv;
             if(findbh(bhv))
                 findbh(bhv)->showcourse();
-            else
+            else{
+                cout << "未找到该课程" << endl;
                 return false;
+            }
             break;
         }
         case 2:{
@@ -199,6 +230,11 @@ bool Coulist::findcourse(){
             cin >> collegev;
             if(!findcollege(collegev))
                 return false;
+            break;
+        }
+        case 5:{
+            //查询所有课程
+            showcourse();
             break;
         }
         default:{
@@ -231,6 +267,7 @@ bool Coulist::find_and_assesscourse(){
         course->setassessment(assessmentv);
     }
     else{
+        cout << "未找到该课程" << endl;
         return false;
     }
     cout << "评价成功!以下是评价后的课程信息" << endl;
@@ -241,24 +278,41 @@ bool Coulist::find_and_assesscourse(){
 
 bool Coulist::modifycourse(int bhv){
     //修改课程信息
-    int bhv2,creditv;
+    int bhv2,creditv,dayv,timev;
     string namev,teacherv,catagoryv,collegev;
     Course* target = findbh(bhv);
     if(target){
         cout << "已查询到这节课，以下是课程信息：" << endl;
         target->showcourse();
-        cout << "请按以下顺序输入课程信息：课程编号 课程名称 任课教师 学分 课程类别 开课学院(为公平,您无法修改课程的评价)" << endl;
-        cin >> bhv2 >> namev >> teacherv >> creditv >> catagoryv >> collegev;
+        cout << "请按以下顺序输入课程信息：课程编号 课程名称 任课教师 学分 课程类别 开课学院 开课日期(周几) 开课时间(第几节)" << endl;
+        cin >> bhv2 >> namev >> teacherv >> creditv >> catagoryv >> collegev >> dayv >> timev;
+        if(findbh(bhv2) && bhv2 != bhv){
+            cout << "课程编号已存在" << endl;
+            return false;
+        }else if (dayv < 1 or dayv > 6 or timev < 1 or timev > 5){
+            cout << "输入时间错误，只允许周一至周五的1到5节课允许排课" << endl;
+            return false;
+        }else if (creditv < 0 or creditv > 10){
+            cout << "输入学分错误，只允许0到10学分" << endl;
+            return false;
+        }else if(!this->checkif_teacher_have_time(dayv,timev,teacherv,bhv)){
+            cout << "该老师在该时间段已有课程" << endl;
+            return false;
+        }
         target->setbh(bhv2);
         target->setname(namev);
         target->setteacher(teacherv);
         target->setcredit(creditv);
         target->setcatagory(catagoryv);
         target->setcollege(collegev);
+        target->setday(dayv);
+        target->settime(timev);
         return true;
     }
-    else
+    else{
+        cout << "未找到该课程" << endl;
         return false;
+    }
 }
 
 Course* Coulist::findbh(int bhv)const{
@@ -269,7 +323,6 @@ Course* Coulist::findbh(int bhv)const{
             return p;
         p = p->next;
     }
-    cout << "查无此课" << endl;
     return NULL;
 }
 

@@ -4,9 +4,11 @@
 class Coulist{
     public:
         Coulist();//构造函数
-        void addcourse(int bhv,string namev,string teacherv,int creditv,string catagoryv,string collegev,int assessmentv);//添加课程
+        bool addcourse(int bhv,string namev,string teacherv,int creditv,string catagoryv,string collegev,int assessmentv,int dayv,int timev);//添加课程
         bool delcourse(int bhv);//按照课程编号删除课程
         bool modifycourse(int bhv);//修改课程
+        bool checkif_teacher_have_time(int dayv,int timev,string teacherv);//检查教师是否有空
+        bool checkif_teacher_have_time(int dayv,int timev,string teacherv,int except_bh);//检查教师除了编号为except_bh的课程之外是否有空
         
         bool find_and_assesscourse();//查找需要评价的课程，并且给予评价
         bool sortcourse();//总排序，具体分为以下两部分

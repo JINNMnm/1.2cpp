@@ -15,7 +15,8 @@
         "limits": "cpp",
         "type_traits": "cpp",
         "cstring": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "iomanip": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

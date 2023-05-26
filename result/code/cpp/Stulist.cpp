@@ -10,16 +10,19 @@ Stulist::Stulist(){
     size = 0;
 }
 
-void Stulist::write(){
+void Stulist::write()const{
     //写入文件
     ofstream out("../txt/student.txt");
     Student* p = head->next;
     while(p){
         out << p->getnum() << ' ';
         out << p->getpw()   << ' ';//写入学号和密码
-        out << p->getnumofchosen()  << ' ';//写入已选课程数量
-        for(int i = 0;i < p->getnumofchosen();i++)
-            out << p->getchosen(i) << ' ';//写入已选课程编号
+        Chosen* q = p->getchosenlist().gethead()->next;
+        out << p->getchosenlist().getsize() << ' ';//写入已选课程数量
+        while(q){
+            out << q->getbh() << ' ';
+            q = q->next;
+        }
         out << endl;
         p = p->next;
     }
@@ -48,9 +51,10 @@ Student* Stulist::stuidentity(){
     return checkifstu(num,pw);
 }
 
-void Stulist::addstu(string& numv,string& pwv,int& numofchosenv,int (&chosenv)[10]){
+void Stulist::addstu(string& numv,string& pwv,int& numofchosenv,int (&chosenv)[25]){
     //添加学生
-    Student *p = new Student(numv,pwv,numofchosenv,chosenv);
+    Student *p = new Student(numv,pwv);
+    p->initchosen(chosenv,numofchosenv);
     p->next = head->next;
     head->next = p;
     size++;
